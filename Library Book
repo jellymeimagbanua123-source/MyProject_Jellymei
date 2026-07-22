@@ -1,0 +1,231 @@
+main.py # ============================================================
+#  main.py — PROGRAM FLOW (Menu + Loop)
+#  Runs the program, shows menu, calls the right function
+# ============================================================
+
+from views import (
+    show_all_books,
+    borrow_book,
+    return_book,
+    show_available_books,
+    show_borrowed_books,
+)
+
+
+def show_menu():
+    print("\n" + "=" * 50)
+    print("     SCHOOL LIBRARY BOOK BORROWING SYSTEM")
+    print("=" * 50)
+    print("  [1] Show all books")
+    print("  [2] Borrow a book")
+    print("  [3] Return a book")
+    print("  [4] Show available books")
+    print("  [5] Show borrowed books")
+    print("  [0] Exit")
+    print("=" * 50)
+
+
+def main():
+    print("\n  Welcome to the School Library System!")
+
+    while True:
+        show_menu()
+        choice = input("  Enter your choice: ").strip()
+
+        if choice == "1":
+            show_all_books()
+
+        elif choice == "2":
+            borrow_book()
+
+        elif choice == "3":
+            return_book()
+
+        elif choice == "4":
+            show_available_books()
+
+        elif choice == "5":
+            show_borrowed_books()
+
+        elif choice == "0":
+            print("\n  Thank you for using the Library System. Goodbye!\n")
+            break
+
+        else:
+            print("  Invalid choice. Please enter 0-5.")
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+models.py
+# ============================================================
+#  models.py — DATA STORAGE (Book Structure)
+#  This is where we define what a Book looks like
+# ============================================================
+
+# Each book is a dictionary with these fields:
+#   - title       : name of the book
+#   - author      : who wrote it
+#   - is_borrowed : True if someone borrowed it, False if available
+#   - borrowed_by : student name (empty string if not borrowed)
+
+# ===== SAMPLE DATA =====
+books = [
+    {
+        "id":          1,
+        "title":       "Python Basics",
+        "author":      "Ana Cruz",
+        "is_borrowed": False,
+        "borrowed_by": ""
+    },
+    {
+        "id":          2,
+        "title":       "Django for Students",
+        "author":      "Mark Reyes",
+        "is_borrowed": False,
+        "borrowed_by": ""
+    },
+    {
+        "id":          3,
+        "title":       "Data Structures",
+        "author":      "Lea Santos",
+        "is_borrowed": False,
+        "borrowed_by": ""
+    },
+]
+
+
+# ===== HELPER: Find a book by ID =====
+def get_book_by_id(book_id):
+    for book in books:
+        if book["id"] == book_id:
+            return book
+    return None
+
+views.py
+# ============================================================
+#  views.py — PROGRAM LOGIC (Functions that manipulate books)
+#  Each function does one specific job
+# ============================================================
+
+from models import books, get_book_by_id
+
+
+# ===== FUNCTION 1: Show all books =====
+def show_all_books():
+    print("\n" + "=" * 50)
+    print("         ALL BOOKS IN THE LIBRARY")
+    print("=" * 50)
+
+    if not books:
+        print("  No books found.")
+    else:
+        for book in books:
+            status = "BORROWED by " + book["borrowed_by"] if book["is_borrowed"] else "AVAILABLE"
+            print(f"  [{book['id']}] {book['title']}")
+            print(f"       Author : {book['author']}")
+            print(f"       Status : {status}")
+            print()
+
+    print("=" * 50)
+
+
+# ===== FUNCTION 2: Borrow a book =====
+def borrow_book():
+    show_available_books()
+
+    try:
+        book_id = int(input("\n  Enter Book ID to borrow: "))
+    except ValueError:
+        print("  Invalid input. Please enter a number.")
+        return
+
+    book = get_book_by_id(book_id)
+
+    if book is None:
+        print("  Book not found.")
+        return
+
+    if book["is_borrowed"]:
+        print(f"  Sorry! '{book['title']}' is already borrowed by {book['borrowed_by']}.")
+        return
+
+    student_name = input("  Enter your name: ").strip()
+
+    if not student_name:
+        print("  Name cannot be empty.")
+        return
+
+    # UPDATE the book data
+    book["is_borrowed"] = True
+    book["borrowed_by"] = student_name
+
+    print(f"\n  SUCCESS! '{book['title']}' has been borrowed by {student_name}.")
+
+
+# ===== FUNCTION 3: Return a book =====
+def return_book():
+    show_borrowed_books()
+
+    try:
+        book_id = int(input("\n  Enter Book ID to return: "))
+    except ValueError:
+        print("  Invalid input. Please enter a number.")
+        return
+
+    book = get_book_by_id(book_id)
+
+    if book is None:
+        print("  Book not found.")
+        return
+
+    if not book["is_borrowed"]:
+        print(f"  '{book['title']}' is not currently borrowed.")
+        return
+
+    borrower = book["borrowed_by"]
+
+    # UPDATE the book data
+    book["is_borrowed"] = False
+    book["borrowed_by"] = ""
+
+    print(f"\n  SUCCESS! '{book['title']}' has been returned by {borrower}. Thank you!")
+
+
+# ===== FUNCTION 4: Show only available books =====
+def show_available_books():
+    available = [b for b in books if not b["is_borrowed"]]
+
+    print("\n" + "=" * 50)
+    print("         AVAILABLE BOOKS")
+    print("=" * 50)
+
+    if not available:
+        print("  No books are currently available.")
+    else:
+        for book in available:
+            print(f"  [{book['id']}] {book['title']} — by {book['author']}")
+
+    print("=" * 50)
+
+
+# ===== FUNCTION 5: Show only borrowed books =====
+def show_borrowed_books():
+    borrowed = [b for b in books if b["is_borrowed"]]
+
+    print("\n" + "=" * 50)
+    print("         BORROWED BOOKS")
+    print("=" * 50)
+
+    if not borrowed:
+        print("  No books are currently borrowed.")
+    else:
+        for book in borrowed:
+            print(f"  [{book['id']}] {book['title']} — by {book['author']}")
+            print(f"       Borrowed by: {book['borrowed_by']}")
+            print()
+
+    print("=" * 50)

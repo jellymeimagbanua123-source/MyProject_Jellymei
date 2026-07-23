@@ -1,0 +1,36 @@
+// REAL LIFE EXAMPLE: KUNG MAG GUWA
+// Kung lowbat ang cellphone, i-charge ko anay.
+// Kung hindi lowbat, tan-awon ko kung may power bank.
+// Kung may power bank, indi na kinahanglan mag-charge.
+// Kung wala power bank, i-charge ko gihapon.
+
+let lowbat = false;
+let mayPowerBank = false;
+
+const readline = require("readline");
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.question("Lowbat ang cellphone? ", (answer) => {
+    lowbat = answer === "huo";
+
+    if (lowbat) {
+        console.log("I-charge ko anay ang cellphone.");
+        rl.close();
+    } else {
+        rl.question("May power bank ka? ", (answer) => {
+            mayPowerBank = answer === "huo";
+
+            if (mayPowerBank) {
+                console.log("Okay lang, indi na ko mag-charge.");
+            } else {
+                console.log("I-charge ko gihapon ang cellphone antes magguwa.");
+            }
+
+            rl.close();
+        });
+    }
+});

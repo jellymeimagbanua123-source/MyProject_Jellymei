@@ -40,16 +40,14 @@ Preference : DOG PERSON 🐶
 
 --------------------------------------------------
 Name       : Jelly Mei Magbanua
-Birthday   : (Your Birthday)
+Birthday   : September 18 2005
 Address    : Iloilo, Philippines
-Fav Song   : (Your Favorite Song)
+Fav Song   : Glue Song By Beabadobee
 Motivation : To finish my studies, achieve my dreams, and make my family proud.
 Support    : Thank you for giving us the opportunity to improve our programming skills through this activity.
 --------------------------------------------------
 Thanks for sharing!
 --------------------------------------------------
-
-Replace (Your Birthday) and (Your Favorite Song) with your actual information.
 
 🛠️ Concepts Used
 
